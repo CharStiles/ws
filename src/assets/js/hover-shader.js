@@ -270,10 +270,10 @@
     }
   }
 
-  // Supersampling factor for the text texture: rendering the glyphs at
-  // twice device resolution halves the bilinear softening when the warp
-  // samples between texels.
-  var SS = 2;
+  // Texture texels per device pixel. 1 keeps the idle overlay a perfect
+  // 1:1 copy of the raster (pixel centers land exactly on texel centers);
+  // higher values sharpen the warped sampling but box-blur the idle state.
+  var SS = 1;
 
   function rasterize(el, rect, fracX, fracY) {
     return getFontCSS().then(function (fontCSS) {
