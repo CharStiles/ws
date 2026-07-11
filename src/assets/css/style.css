@@ -58,6 +58,16 @@ a {
   font-size: 1.08em;
 }
 
+/* The home glyph — the custom italic font doesn't cover ⊹, so let it
+   render upright from the system serif at a size that sits comfortably
+   above the stacked links. */
+.home-link {
+  font-family: Georgia, "Times New Roman", serif;
+  font-style: normal;
+  font-size: 1.2em;
+  line-height: 1;
+}
+
 /* Corner navigation, stacked and right-aligned. */
 header nav {
   position: fixed;
@@ -72,6 +82,14 @@ header nav {
 
 .intro {
   margin-top: 26vh;
+}
+
+.intro h1 {
+  margin-bottom: 0;
+}
+
+.intro p {
+  margin-top: 0;
 }
 
 .intro-links {
@@ -147,13 +165,101 @@ footer {
 
 }
 
+/* CV page: side-by-side section columns (not newspaper-style flow).
+   Each .cv-col is one vertical stack; the grid places them in a row. */
+body.cv-page {
+  padding-left: 1.5rem;
+}
+
+.cv-page main {
+  max-width: none;
+  margin-right: 9rem;
+}
+
+.cv-sheet h1 {
+  margin-bottom: 2rem;
+}
+
+.cv-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 1.25rem 1.75rem;
+  align-items: start;
+}
+
+.cv-section {
+  min-width: 0;
+}
+
+.cv-section h2 {
+  font-size: 0.72rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  margin: 0 0 0.5rem;
+}
+
+.cv-section p {
+  font-size: 0.75rem;
+  line-height: 1.45;
+  margin: 0 0 0.25rem;
+  padding-left: 3rem;
+  text-indent: -3rem;
+}
+
+.cv-section p strong {
+  display: inline-block;
+  width: 3rem;
+  text-indent: 0;
+  font-weight: normal;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 72rem) {
+  .cv-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 52rem) {
+  .cv-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 40rem) {
+  body.cv-page {
+    padding-left: 1rem;
+  }
+
+  .cv-page main {
+    margin-right: 0;
+  }
+
+  .cv-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cv-section p {
+    padding-left: 3.25rem;
+    text-indent: -3.25rem;
+  }
+
+  .cv-section p strong {
+    width: 3.25rem;
+  }
+}
+
 /* Overlay canvas used by the hover shader. It sits exactly on top of the
    hovered text but never intercepts the pointer, so text stays selectable.
    No opacity transition: the swap must happen in a single frame (the shader
    starts as flat ink identical to the text, so an instant swap is seamless
    — a fade would show both or neither for a moment). */
+/* Fixed, not absolute: the canvas pads 28px past the hovered element, and
+   an absolute canvas near a page edge would grow the document and summon
+   scrollbars. Fixed elements never affect layout; the shader tears down on
+   scroll anyway. */
 .hover-shader-canvas {
-  position: absolute;
+  position: fixed;
   pointer-events: none;
   z-index: 10;
   opacity: 0;

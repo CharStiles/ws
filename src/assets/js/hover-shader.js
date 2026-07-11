@@ -64,12 +64,12 @@
     "  gAmt = uAmt * smoothstep(1.6, 0.0, d);",
     "  float depth = 0.05 * gAmt + 0.001;",
     "",
-    "  // Camera: straight-down orthographic rays. No parallax tilt — a",
-    "  // tilted ray lands on a different spot of the heightfield than the",
-    "  // screen pixel's own letter mask, which offsets the shading from",
-    "  // the glyphs and reads as ghosting/blur.",
+    "  // Camera: orthographic-ish rays, tilted slightly toward the mouse so",
+    "  // the relief parallaxes as you move over it. Clamped so letters far",
+    "  // from the cursor do not smear.",
     "  vec3 ro = vec3(uv, depth * 2.5 + 0.02);",
-    "  vec3 rd = vec3(0.0, 0.0, -1.0);",
+    "  vec2 tilt = clamp((uMouse - uv) * 0.14, -0.045, 0.045) * gAmt;",
+    "  vec3 rd = normalize(vec3(tilt, -1.0));",
     "",
     "  float t = 0.0;",
     "  vec3 p = ro;",
@@ -91,6 +91,9 @@
     "  // identical to the DOM text; the raymarch only shades the interior.",
     "  float aRaw = textAt(warp(uv));",
     "  if (aRaw <= 0.003) { gl_FragColor = vec4(0.0); return; }",
+    "  // The SVG rasterizer antialiases a touch heavier than DOM text;",
+    "  // this curve thins the edge halos back to the DOM's visual weight.",
+    "  aRaw = pow(aRaw, 1.6);",
     "",
     "  // Normal from the height gradient.",
     "  vec2 e = vec2(2.0 / uRes.y, 0.0);",
@@ -125,12 +128,8 @@
     "  shade += darkness * (spk - 0.5) * 0.5;",
     "  shade = clamp(shade, 0.0, 1.0);",
     "",
-    "  // Shading is centered on the flat-lit value: an undisturbed top",
-    "  // face renders as EXACTLY the ink color, so glyph interiors keep",
-    "  // their weight. Only slopes and shadowed crevices deviate --",
-    "  // lighter toward the light, darker (with speckle) in shadow.",
-    "  float flat_ = 0.35 + 0.65 * 0.675;",
-    "  vec3 relief = clamp(uInk + vec3(shade - flat_) * 0.9, 0.0, 0.85);",
+    "  // Monotone ink: lit faces are lighter ink, shadows are deeper.",
+    "  vec3 relief = uInk + (1.0 - uInk) * shade * 0.55;",
     "",
     "  // Far from the mouse the letters render as plain flat ink, so the",
     "  // overlay is indistinguishable from the real text underneath.",
@@ -267,12 +266,7 @@
     }
   }
 
-  // Texture texels per device pixel. 1 keeps the idle overlay a perfect
-  // 1:1 copy of the raster (pixel centers land exactly on texel centers);
-  // higher values sharpen the warped sampling but box-blur the idle state.
-  var SS = 1;
-
-  function rasterize(el, rect, fracX, fracY) {
+  function rasterize(el, rect) {
     return getFontCSS().then(function (fontCSS) {
       var cs = getComputedStyle(el);
       var rootStyle = STYLE_PROPS.map(function (p) {
@@ -288,23 +282,19 @@
       clone.removeAttribute("id");
       clone.setAttribute("style", rootStyle);
       inlineDescendantStyles(el, clone);
-      var scale = DPR * SS;
-      // The translate bakes the element's subpixel position (relative to
-      // the device-pixel grid) into the raster, so the texture's glyph
-      // antialiasing has the same phase as the real DOM text underneath.
+      // Render at device resolution (scale the HTML up inside a DPR-sized
+      // SVG) so the texture is pixel-crisp and matches the DOM text weight.
       var html =
         '<div xmlns="http://www.w3.org/1999/xhtml" style="margin:0;' +
         "width:" + rect.width + "px;" +
-        "transform:translate(" + (fracX || 0) * SS + "px," +
-        (fracY || 0) * SS + "px) scale(" + scale + ");" +
-        "transform-origin:0 0;" + '">' +
+        "transform:scale(" + DPR + ");transform-origin:0 0;" + '">' +
         new XMLSerializer().serializeToString(clone) +
         "</div>";
 
       var svg =
         '<svg xmlns="http://www.w3.org/2000/svg" width="' +
-        Math.ceil(rect.width * scale + SS) + '" height="' +
-        Math.ceil(rect.height * scale + SS) +
+        Math.ceil(rect.width * DPR) + '" height="' +
+        Math.ceil(rect.height * DPR) +
         '"><style>' + fontCSS +
         "*{color:#000;}" +
         '</style><foreignObject width="100%" height="100%">' +
@@ -405,19 +395,7 @@
     whenStable(el).then(function (rect) {
       if (rect.width < 2 || rect.height < 2) return null;
       if (el.matches(":hover") === false) return null;
-      // Subpixel phase of the element against the device-pixel grid; the
-      // canvas gets snapped to that grid, so this remainder is baked into
-      // the texture raster to keep the glyph antialiasing in phase with
-      // the DOM text.
-      var fracX =
-        (rect.left + window.scrollX) * DPR -
-        Math.round((rect.left + window.scrollX - PAD) * DPR) -
-        PAD * DPR;
-      var fracY =
-        (rect.top + window.scrollY) * DPR -
-        Math.round((rect.top + window.scrollY - PAD) * DPR) -
-        PAD * DPR;
-      return rasterize(el, rect, fracX, fracY).then(function (img) {
+      return rasterize(el, rect).then(function (img) {
         return { img: img, rect: rect };
       });
     }).then(function (res) {
@@ -432,13 +410,12 @@
       var w = Math.ceil((rect.width + PAD * 2) * DPR);
       var h = Math.ceil((rect.height + PAD * 2) * DPR);
 
-      // The texture is supersampled: SS texels per device pixel.
-      texCanvas.width = w * SS;
-      texCanvas.height = h * SS;
-      texCtx.clearRect(0, 0, w * SS, h * SS);
+      texCanvas.width = w;
+      texCanvas.height = h;
+      texCtx.clearRect(0, 0, w, h);
       // Draw at the image's natural size — any fractional rescale here
       // resamples the glyphs and fattens their antialiased edges.
-      texCtx.drawImage(img, PAD * DPR * SS, PAD * DPR * SS);
+      texCtx.drawImage(img, Math.round(PAD * DPR), Math.round(PAD * DPR));
 
       // Snap the canvas to the device-pixel grid and size it to exactly
       // buffer/DPR CSS pixels — otherwise the compositor rescales the
@@ -448,10 +425,9 @@
       canvas.height = h;
       canvas.style.width = w / DPR + "px";
       canvas.style.height = h / DPR + "px";
-      canvas.style.left =
-        Math.round((rect.left + window.scrollX - PAD) * DPR) / DPR + "px";
-      canvas.style.top =
-        Math.round((rect.top + window.scrollY - PAD) * DPR) / DPR + "px";
+      // The canvas is position:fixed, so these are viewport coordinates.
+      canvas.style.left = Math.round((rect.left - PAD) * DPR) / DPR + "px";
+      canvas.style.top = Math.round((rect.top - PAD) * DPR) / DPR + "px";
 
       gl.viewport(0, 0, w, h);
       gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);

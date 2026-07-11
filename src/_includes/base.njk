@@ -5,12 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% if title and title != site.name %}{{ title }} — {{ site.name }}{% else %}{{ site.name }}{% endif %}</title>
   <meta name="description" content="{{ description or site.description }}">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/assets/css/style.css">
 </head>
-<body>
+<body{% if bodyClass %} class="{{ bodyClass }}"{% endif %}>
   <header>
     <nav>
-      <a href="/" class="home-link">{{ site.name }}</a>
+      <a href="/" class="home-link" aria-label="{{ site.name }} — home">⊹</a>
       <a href="/performances/">Performances</a>
       <a href="/research/">Research</a>
       <a href="/about/">About</a>
