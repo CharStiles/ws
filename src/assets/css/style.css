@@ -199,18 +199,15 @@ body.cv-page {
 }
 
 .cv-section p {
+  display: grid;
+  grid-template-columns: 3rem 1fr;
+  column-gap: 0.35rem;
   font-size: 0.75rem;
   line-height: 1.45;
   margin: 0 0 0.25rem;
-  padding-left: 3rem;
-  text-indent: -3rem;
 }
 
-.cv-section p strong {
-  display: inline-block;
-  width: 3rem;
-  text-indent: 0;
-  font-weight: normal;
+.cv-y {
   font-variant-numeric: tabular-nums;
 }
 
@@ -240,12 +237,7 @@ body.cv-page {
   }
 
   .cv-section p {
-    padding-left: 3.25rem;
-    text-indent: -3.25rem;
-  }
-
-  .cv-section p strong {
-    width: 3.25rem;
+    grid-template-columns: 3.25rem 1fr;
   }
 }
 
