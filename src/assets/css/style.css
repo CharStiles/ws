@@ -1,0 +1,172 @@
+@font-face {
+  font-family: "RegTimes";
+  src: url("/assets/fonts/RegTimes.otf") format("opentype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "ANRT Baskerville";
+  src: url("/assets/fonts/RegItalicAnrtBask.otf") format("opentype");
+  font-style: italic;
+  font-display: swap;
+}
+
+:root {
+  --ink: #111;
+  --paper: #fff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "RegTimes", "Times New Roman", serif;
+  color: var(--ink);
+  background: var(--paper);
+  margin: 0;
+  /* Asymmetric: generous left void, text hangs off it. */
+  padding: 1.25rem 1.5rem 7rem clamp(1.25rem, 16vw, 13rem);
+  line-height: 1.5;
+  font-size: 1.05rem;
+}
+
+main {
+  max-width: 36rem;
+}
+
+/* Titles match the corner links in size (1.08em of the body text).
+   Nothing on the site changes size on hover. */
+h1,
+h2,
+h3 {
+  font-family: "RegTimes", "Times New Roman", serif;
+  font-weight: normal;
+  font-size: 1.08em;
+  line-height: 1.5;
+}
+
+h1 {
+  margin: 0 0 1.5rem;
+}
+
+a {
+  color: var(--ink);
+  text-decoration: none;
+  font-family: "ANRT Baskerville", "Times New Roman", serif;
+  font-style: italic;
+  font-size: 1.08em;
+}
+
+/* Corner navigation, stacked and right-aligned. */
+header nav {
+  position: fixed;
+  top: 1.25rem;
+  right: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.3rem;
+  z-index: 20;
+}
+
+.intro {
+  margin-top: 26vh;
+}
+
+.intro-links {
+  margin-top: 3.5rem;
+}
+
+
+article,
+main > h1 {
+  margin-top: 14vh;
+}
+
+.entry-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 3rem;
+}
+
+.entry-list li {
+  margin: 1.4rem 0;
+}
+
+
+.meta {
+  display: block;
+  opacity: 0.5;
+  font-size: 0.85rem;
+  font-style: normal;
+}
+
+.section-note {
+  opacity: 0.6;
+}
+
+/* Contact links live in the bottom-right corner, mirroring the nav. */
+footer {
+  position: fixed;
+  right: 1.5rem;
+  bottom: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.3rem;
+  z-index: 20;
+}
+
+::selection {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+@media (max-width: 40rem) {
+  body {
+    padding: 1rem 1rem 3rem;
+  }
+
+  header nav,
+  footer {
+    position: static;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: baseline;
+  }
+
+  footer {
+    margin-top: 4rem;
+  }
+
+  .intro {
+    margin-top: 14vh;
+  }
+
+}
+
+/* Overlay canvas used by the hover shader. It sits exactly on top of the
+   hovered text but never intercepts the pointer, so text stays selectable.
+   No opacity transition: the swap must happen in a single frame (the shader
+   starts as flat ink identical to the text, so an instant swap is seamless
+   — a fade would show both or neither for a moment). */
+.hover-shader-canvas {
+  position: absolute;
+  pointer-events: none;
+  z-index: 10;
+  opacity: 0;
+}
+
+.hover-shader-canvas.visible {
+  opacity: 1;
+}
+
+/* While the shader overlay is showing, the real text goes transparent but
+   stays in the DOM — still selectable, still accessible. */
+.shader-hidden,
+.shader-hidden * {
+  color: transparent !important;
+  text-decoration-color: transparent !important;
+}

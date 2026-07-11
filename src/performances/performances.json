@@ -1,0 +1,5 @@
+{
+  "layout": "page.njk",
+  "tags": "performance",
+  "permalink": "/performances/{{ page.fileSlug }}/"
+}

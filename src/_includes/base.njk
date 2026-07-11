@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% if title and title != site.name %}{{ title }} — {{ site.name }}{% else %}{{ site.name }}{% endif %}</title>
+  <meta name="description" content="{{ description or site.description }}">
+  <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="/" class="home-link">{{ site.name }}</a>
+      <a href="/performances/">Performances</a>
+      <a href="/research/">Research</a>
+      <a href="/about/">About</a>
+    </nav>
+  </header>
+
+  <main>
+    {{ content | safe }}
+  </main>
+
+  <footer>
+    <a href="{{ site.emailList }}">Email list</a>
+    <a href="{{ site.instagram }}">Instagram</a>
+  </footer>
+
+  <script src="/assets/js/hover-shader.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+---
+layout: base.njk
+title: Performances
+permalink: /performances/
+eleventyExcludeFromCollections: true
+---
+<h1>Performances</h1>
+<ul class="entry-list">
+  {%- for post in collections.performance | reverse %}
+  <li>
+    <a href="{{ post.url }}">{{ post.data.title }}</a>
+    {%- if post.data.venue %} <span class="meta">{{ post.data.venue }}</span>{% endif %}
+    {%- if post.date %} <span class="meta">{{ post.date | readableDate }}</span>{% endif %}
+  </li>
+  {%- endfor %}
+</ul>

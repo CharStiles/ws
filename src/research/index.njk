@@ -1,0 +1,16 @@
+---
+layout: base.njk
+title: Research
+permalink: /research/
+eleventyExcludeFromCollections: true
+---
+<h1>Research</h1>
+<p class="section-note">My research folds into my art practice.</p>
+<ul class="entry-list">
+  {%- for post in collections.research | reverse %}
+  <li>
+    <a href="{{ post.url }}">{{ post.data.title }}</a>
+    {%- if post.date %} <span class="meta">{{ post.date | readableDate }}</span>{% endif %}
+  </li>
+  {%- endfor %}
+</ul>
