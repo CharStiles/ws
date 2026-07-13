@@ -243,9 +243,8 @@ body.cv-page {
 
 /* Overlay canvas used by the hover shader. It sits exactly on top of the
    hovered text but never intercepts the pointer, so text stays selectable.
-   No opacity transition: the swap must happen in a single frame (the shader
-   starts as flat ink identical to the text, so an instant swap is seamless
-   — a fade would show both or neither for a moment). */
+   Fade is driven by a shader uniform so flat ink can composite over visible
+   DOM text without CSS opacity darkening the letters. */
 /* Fixed, not absolute: the canvas pads 28px past the hovered element, and
    an absolute canvas near a page edge would grow the document and summon
    scrollbars. Fixed elements never affect layout; the shader tears down on
@@ -254,11 +253,6 @@ body.cv-page {
   position: fixed;
   pointer-events: none;
   z-index: 10;
-  opacity: 0;
-}
-
-.hover-shader-canvas.visible {
-  opacity: 1;
 }
 
 /* While the shader overlay is showing, the real text goes transparent but

@@ -28,6 +28,7 @@
     "uniform float uTime;",
     "uniform vec2 uMouse;",
     "uniform float uAmt;",
+    "uniform float uOpacity;",
     "uniform vec3 uInk;",
     "",
     "float gAmt; // effect strength at this fragment (gradient toward mouse)",
@@ -137,7 +138,7 @@
     "  // overlay is indistinguishable from the real text underneath.",
     "  vec3 col = mix(uInk, relief, gAmt);",
     "",
-    "  gl_FragColor = vec4(col * aRaw, aRaw);",
+    "  gl_FragColor = vec4(col * aRaw, aRaw * uOpacity);",
     "}",
   ].join("\n");
 
@@ -188,6 +189,7 @@
     time: gl.getUniformLocation(prog, "uTime"),
     mouse: gl.getUniformLocation(prog, "uMouse"),
     amt: gl.getUniformLocation(prog, "uAmt"),
+    opacity: gl.getUniformLocation(prog, "uOpacity"),
     ink: gl.getUniformLocation(prog, "uInk"),
     text: gl.getUniformLocation(prog, "uText"),
   };
@@ -317,7 +319,7 @@
   // Hover lifecycle
   // ---------------------------------------------------------------------
 
-  var active = null; // { el, rect, raf, amt, target, start }
+  var active = null; // { el, rect, raf, amt, target, opacity, opacityTarget, textHidden, start }
   var pointer = { x: -1e4, y: -1e4 }; // client coords, tracked globally
   var texCanvas = document.createElement("canvas");
   var texCtx = texCanvas.getContext("2d");
@@ -327,13 +329,55 @@
     pointer.y = e.clientY;
   });
 
+  function showText(a) {
+    if (!a.textHidden) return;
+    a.el.classList.remove("shader-hidden");
+    a.textHidden = false;
+  }
+
+  function hideText(a) {
+    if (a.textHidden) return;
+    a.el.style.fontSize = getComputedStyle(a.el).fontSize;
+    a.el.classList.add("shader-hidden");
+    a.textHidden = true;
+  }
+
   function frame(now) {
     if (!active) return;
     var a = active;
 
-    // Ease the effect amount toward its target; tear down once faded out.
     a.amt += (a.target - a.amt) * 0.07;
-    if (a.target === 0 && a.amt < 0.01) {
+    a.opacity += (a.opacityTarget - a.opacity) * 0.1;
+
+    // Once the DOM text is back, keep the overlay flat so compositing over
+    // the real text stays pixel-stable (relief + text below reads as dark).
+    if (!a.textHidden && a.opacityTarget === 0) {
+      a.amt = 0;
+    }
+
+    // Fade in: flat ink over visible text, then swap and ramp relief.
+    if (a.pendingEffect && a.opacity > 0.99) {
+      a.pendingEffect = false;
+      hideText(a);
+      a.target = 1;
+    }
+
+    // Fade out: flatten relief, restore text, fade shader alpha over it.
+    if (a.flattenFirst && a.amt < 0.005) {
+      a.flattenFirst = false;
+      a.amt = 0;
+      showText(a);
+      a.opacityTarget = 0;
+    }
+
+    if (
+      a.target === 0 &&
+      !a.flattenFirst &&
+      a.opacityTarget === 0 &&
+      a.amt < 0.005 &&
+      a.opacity < 0.015 &&
+      !a.textHidden
+    ) {
       teardown();
       return;
     }
@@ -345,6 +389,7 @@
 
     gl.uniform1f(U.time, (now - a.start) / 1000);
     gl.uniform1f(U.amt, a.amt);
+    gl.uniform1f(U.opacity, a.opacity);
     gl.uniform2f(U.mouse, mx, my);
     gl.drawArrays(gl.TRIANGLES, 0, 3);
     a.raf = requestAnimationFrame(frame);
@@ -384,11 +429,8 @@
   function teardown() {
     if (!active) return;
     cancelAnimationFrame(active.raf);
-    // Release the locked font size in the same frame the text reappears:
-    // the swap is pixel-identical, then any hover-grow transition plays
-    // out on the visible text.
     active.el.style.fontSize = "";
-    active.el.classList.remove("shader-hidden");
+    showText(active);
     canvas.classList.remove("visible");
     active = null;
   }
@@ -444,21 +486,22 @@
       // empty and the text is never hidden early — no white blink.
       gl.uniform1f(U.time, 0);
       gl.uniform1f(U.amt, 0);
+      gl.uniform1f(U.opacity, 0);
       gl.uniform2f(U.mouse, 0.5, 0.5);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
 
-      // Freeze the element's font size at its (possibly hover-grown) value
-      // so the invisible text cannot shrink under the canvas when the
-      // cursor moves off — the swap back stays pixel-identical.
-      el.style.fontSize = getComputedStyle(el).fontSize;
-      el.classList.add("shader-hidden");
       canvas.classList.add("visible");
 
       active = {
         el: el,
         rect: rect,
         amt: 0,
-        target: 1,
+        target: 0,
+        opacity: 0,
+        opacityTarget: 1,
+        pendingEffect: true,
+        flattenFirst: false,
+        textHidden: false,
         start: performance.now(),
         raf: 0,
       };
@@ -477,6 +520,10 @@
     if (block) el = block;
     if (active && active.el === el) {
       active.target = 1;
+      active.opacityTarget = 1;
+      active.pendingEffect = false;
+      active.flattenFirst = false;
+      if (active.opacity > 0.99 && active.amt < 0.01) hideText(active);
       return;
     }
     activate(el);
@@ -488,6 +535,14 @@
     if (to && active.el.contains(to)) return;
     if (to && to.closest && to.closest(SELECTOR) === active.el) return;
     active.target = 0;
+    active.pendingEffect = false;
+    if (!active.textHidden) {
+      active.flattenFirst = false;
+      active.amt = 0;
+      active.opacityTarget = 0;
+    } else {
+      active.flattenFirst = true;
+    }
   });
 
   window.addEventListener("scroll", teardown, { passive: true });
