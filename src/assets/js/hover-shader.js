@@ -11,6 +11,7 @@
   if (window.matchMedia("(hover: none)").matches) return;
   // CV lines use a year|entry grid; the shader rasterizer collapses that gap.
   if (document.body.classList.contains("cv-page")) return;
+  if (document.body.classList.contains("standalone-page")) return;
 
   var SELECTOR = "h1, h2, h3, p, li, nav a, footer a";
   var PAD = 28; // px of breathing room around the element for warp/shadow
