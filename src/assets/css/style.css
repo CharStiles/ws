@@ -207,6 +207,13 @@ body.standalone-page {
   margin: var(--space-xl) 0 0;
 }
 
+.performance-photo-credit {
+  margin: var(--space-s) 0 0;
+  font-size: 0.85rem;
+  opacity: 0.5;
+  font-style: normal;
+}
+
 @media (max-width: 40rem) {
   body.standalone-page {
     padding-right: 1rem;
