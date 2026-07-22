@@ -19,4 +19,5 @@ Carnegie Mellon University, Duke University, University of Limerick, MIT,
 Cooper Union, The New School and NYU.
 
 [Instagram](https://www.instagram.com/charstiles/) ·
-[GitHub](https://github.com/charstiles)
+[GitHub](https://github.com/charstiles) ·
+[CV](/cv/)

@@ -214,8 +214,8 @@
     // otherwise the browser's font matching inside the SVG picks a
     // different face (or synthesizes a slant) and the metrics drift.
     var fonts = [
-      { family: "RegTimes", style: "normal", url: "/assets/fonts/RegTimes.otf" },
-      { family: "ANRT Baskerville", style: "italic", url: "/assets/fonts/RegItalicAnrtBask.otf" },
+      { family: "RegTimes", style: "normal", weight: "400", url: "/assets/fonts/RegTimes.otf" },
+      { family: "ANRT Baskerville", style: "italic", weight: "400", url: "/assets/fonts/RegItalicAnrtBask.otf" },
     ];
     fontCSSPromise = Promise.all(
       fonts.map(function (f) {
@@ -233,6 +233,7 @@
             return (
               "@font-face{font-family:'" + f.family + "';" +
               "font-style:" + f.style + ";" +
+              "font-weight:" + f.weight + ";" +
               "src:url(data:font/otf;base64," + btoa(bin) +
               ") format('opentype');}"
             );
