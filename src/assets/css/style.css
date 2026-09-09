@@ -220,6 +220,271 @@ body.standalone-page {
   }
 }
 
+/* CCARP syllabus — EID 364 */
+@font-face {
+  font-family: "Terminal Grotesque";
+  src: url("/assets/fonts/terminal-grotesque_open.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+body.ccarp-page main {
+  max-width: 42rem;
+}
+
+.ccarp-sheet {
+  margin-top: 10vh;
+}
+
+.ccarp-hero {
+  margin-bottom: var(--space-xl);
+}
+
+.ccarp-kicker {
+  margin: 0 0 var(--space-m);
+  font-size: 0.72rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.ccarp-hero h1 {
+  margin: 0 0 var(--space-l);
+  line-height: 1.35;
+}
+
+.ccarp-course-meta {
+  display: grid;
+  gap: var(--space-m);
+  margin: 0;
+}
+
+.ccarp-course-meta p {
+  margin: 0;
+  display: grid;
+  grid-template-columns: 6.5rem 1fr;
+  column-gap: var(--space-s);
+}
+
+.ccarp-course-meta span:first-child {
+  font-size: 0.72rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.ccarp-schedule {
+  font-family: "Terminal Grotesque", monospace;
+  font-size: 1.05rem;
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+}
+
+.ccarp-opening-quote,
+.ccarp-closing-quote {
+  margin: var(--space-xl) 0;
+  padding: 0;
+  border: 0;
+}
+
+.ccarp-opening-quote p,
+.ccarp-closing-quote p {
+  margin: 0 0 var(--space-s);
+}
+
+.ccarp-opening-quote cite,
+.ccarp-closing-quote cite {
+  display: block;
+  font-style: normal;
+  font-size: 0.85rem;
+  opacity: 0.6;
+}
+
+.ccarp-sheet h2 {
+  font-size: 0.72rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.ccarp-section-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-s) var(--space-m);
+  margin-bottom: var(--space-m);
+}
+
+.ccarp-section-heading p {
+  margin: 0;
+  font-size: 0.85rem;
+  opacity: 0.6;
+}
+
+.ccarp-sheet section {
+  margin-top: var(--space-xl);
+}
+
+.ccarp-section-intro {
+  margin: 0 0 var(--space-l);
+}
+
+.ccarp-phases {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: var(--space-l);
+}
+
+.ccarp-phases > li {
+  display: grid;
+  grid-template-columns: 2.5rem 1fr;
+  column-gap: var(--space-m);
+  align-items: start;
+}
+
+.ccarp-phase-number {
+  font-size: 0.72rem;
+  letter-spacing: 0.09em;
+  padding-top: 0.15rem;
+}
+
+.ccarp-phases h3 {
+  margin: 0 0 var(--space-s);
+  font-size: 1.08em;
+}
+
+.ccarp-phases ul {
+  margin: 0;
+  padding-left: 1.1rem;
+}
+
+.ccarp-phases li + li {
+  margin-top: var(--space-xs);
+}
+
+.ccarp-two-column {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-xl) var(--space-l);
+  margin-top: var(--space-xl);
+}
+
+.ccarp-two-column section {
+  margin-top: 0;
+}
+
+.ccarp-two-column ul,
+.ccarp-resources ul {
+  margin: var(--space-m) 0 0;
+  padding-left: 1.1rem;
+}
+
+.ccarp-two-column li + li,
+.ccarp-resources li + li {
+  margin-top: var(--space-s);
+}
+
+.ccarp-grading {
+  margin: var(--space-m) 0 0;
+}
+
+.ccarp-grading > div {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  column-gap: var(--space-m);
+  padding: var(--space-s) 0;
+  border-top: 1px solid rgb(17 17 17 / 0.12);
+}
+
+.ccarp-grading > div:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.ccarp-grading dt,
+.ccarp-grading dd {
+  margin: 0;
+}
+
+.ccarp-grading dd {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.ccarp-resources {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-xl) var(--space-l);
+  margin-top: var(--space-m);
+}
+
+.ccarp-resources h3 {
+  margin: 0;
+  font-size: 1.08em;
+}
+
+.ccarp-outcomes {
+  list-style: none;
+  padding: 0;
+  margin: var(--space-m) 0 0;
+  display: grid;
+  gap: var(--space-l);
+}
+
+.ccarp-outcomes > li {
+  display: grid;
+  grid-template-columns: 2.75rem 1fr;
+  column-gap: var(--space-m);
+  align-items: start;
+}
+
+.ccarp-outcomes > li > span {
+  font-size: 0.72rem;
+  letter-spacing: 0.09em;
+  padding-top: 0.15rem;
+}
+
+.ccarp-outcomes h3 {
+  margin: 0 0 var(--space-xs);
+  font-size: 1.08em;
+}
+
+.ccarp-outcomes p {
+  margin: 0;
+}
+
+@media (max-width: 40rem) {
+  body.ccarp-page main {
+    max-width: none;
+  }
+
+  .ccarp-sheet {
+    margin-top: 14vh;
+  }
+
+  .ccarp-course-meta p {
+    grid-template-columns: 1fr;
+    gap: var(--space-xs);
+  }
+
+  .ccarp-two-column,
+  .ccarp-resources {
+    grid-template-columns: 1fr;
+  }
+
+  .ccarp-phases > li,
+  .ccarp-outcomes > li {
+    grid-template-columns: 1fr;
+  }
+
+  .ccarp-phase-number,
+  .ccarp-outcomes > li > span {
+    margin-bottom: var(--space-xs);
+  }
+}
+
 /* CV page: four vertical stacks side by side (not newspaper-style flow). */
 body.cv-page {
   padding-left: clamp(1.25rem, 8vw, 6rem);
