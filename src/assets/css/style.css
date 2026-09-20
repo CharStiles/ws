@@ -229,8 +229,51 @@ body.standalone-page {
   font-display: swap;
 }
 
+body.ccarp-page {
+  font-size: 1.5rem;
+}
+
 body.ccarp-page main {
-  max-width: 42rem;
+  max-width: 46rem;
+  padding-right: calc(var(--nav-right) + 4.5rem + var(--space-m));
+}
+
+.ccarp-glyph {
+  font-family: Georgia, "Apple Color Emoji", "Segoe UI Emoji", serif;
+  font-style: normal;
+  margin-right: 0.35em;
+  letter-spacing: 0.08em;
+}
+
+/* CCARP motif — 𓆝 ⋆. at page edges only */
+.ccarp-page .ccarp-kicker::before,
+.ccarp-page .ccarp-opening-quote::before,
+.ccarp-page .ccarp-sheet::after {
+  font-family: Georgia, "Apple Color Emoji", "Segoe UI Emoji", serif;
+  font-style: normal;
+  letter-spacing: 0.06em;
+  opacity: 0.5;
+}
+
+.ccarp-page .ccarp-kicker::before {
+  content: "𓆝 ⋆. ";
+}
+
+.ccarp-page .ccarp-opening-quote::before {
+  content: "𓆝 ⋆.";
+  display: block;
+  margin-bottom: var(--space-s);
+}
+
+.ccarp-page .ccarp-sheet::after {
+  content: "°‧ 𓆝 𓆟 𓆞 ·｡";
+  display: block;
+  margin-top: var(--space-xl);
+  text-align: right;
+}
+
+.ccarp-nav a[aria-current="page"] {
+  opacity: 0.45;
 }
 
 .ccarp-sheet {
@@ -243,7 +286,7 @@ body.ccarp-page main {
 
 .ccarp-kicker {
   margin: 0 0 var(--space-m);
-  font-size: 0.72rem;
+  font-size: 0.64em;
   letter-spacing: 0.09em;
   text-transform: uppercase;
 }
@@ -251,6 +294,7 @@ body.ccarp-page main {
 .ccarp-hero h1 {
   margin: 0 0 var(--space-l);
   line-height: 1.35;
+  font-size: 1.2em;
 }
 
 .ccarp-course-meta {
@@ -267,14 +311,14 @@ body.ccarp-page main {
 }
 
 .ccarp-course-meta span:first-child {
-  font-size: 0.72rem;
+  font-size: 0.64em;
   letter-spacing: 0.09em;
   text-transform: uppercase;
 }
 
 .ccarp-schedule {
   font-family: "Terminal Grotesque", monospace;
-  font-size: 1.05rem;
+  font-size: 1.05em;
   line-height: 1.4;
   letter-spacing: 0.01em;
 }
@@ -295,12 +339,12 @@ body.ccarp-page main {
 .ccarp-closing-quote cite {
   display: block;
   font-style: normal;
-  font-size: 0.85rem;
+  font-size: 0.68em;
   opacity: 0.6;
 }
 
 .ccarp-sheet h2 {
-  font-size: 0.72rem;
+  font-size: 0.64em;
   letter-spacing: 0.09em;
   text-transform: uppercase;
   margin: 0;
@@ -317,7 +361,7 @@ body.ccarp-page main {
 
 .ccarp-section-heading p {
   margin: 0;
-  font-size: 0.85rem;
+  font-size: 0.68em;
   opacity: 0.6;
 }
 
@@ -345,7 +389,7 @@ body.ccarp-page main {
 }
 
 .ccarp-phase-number {
-  font-size: 0.72rem;
+  font-size: 0.58em;
   letter-spacing: 0.09em;
   padding-top: 0.15rem;
 }
@@ -441,7 +485,7 @@ body.ccarp-page main {
 }
 
 .ccarp-outcomes > li > span {
-  font-size: 0.72rem;
+  font-size: 0.58em;
   letter-spacing: 0.09em;
   padding-top: 0.15rem;
 }
@@ -458,6 +502,7 @@ body.ccarp-page main {
 @media (max-width: 40rem) {
   body.ccarp-page main {
     max-width: none;
+    padding-right: 0;
   }
 
   .ccarp-sheet {
@@ -483,6 +528,85 @@ body.ccarp-page main {
   .ccarp-outcomes > li > span {
     margin-bottom: var(--space-xs);
   }
+}
+
+/* CCARP weekly schedule */
+.ccarp-schedule-sheet .ccarp-hero h1 {
+  margin-bottom: var(--space-m);
+}
+
+.ccarp-schedule-intro {
+  margin: 0 0 var(--space-l);
+  max-width: 34rem;
+}
+
+.ccarp-schedule-list {
+  margin-top: var(--space-xl);
+}
+
+.ccarp-week {
+  padding: var(--space-l) 0;
+  border-top: 1px solid rgb(17 17 17 / 0.12);
+}
+
+.ccarp-week-date {
+  font-family: "Terminal Grotesque", monospace;
+  font-size: 1.05em;
+  letter-spacing: 0.01em;
+  text-transform: none;
+  margin: 0 0 var(--space-s);
+}
+
+.ccarp-week-note {
+  margin: 0 0 var(--space-s);
+  font-size: 0.68em;
+  opacity: 0.6;
+}
+
+.ccarp-week-assignments {
+  margin: 0 0 var(--space-m);
+}
+
+.ccarp-week-class h3 {
+  font-size: 0.64em;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  margin: 0 0 var(--space-xs);
+}
+
+.ccarp-week-class p {
+  margin: 0;
+}
+
+.ccarp-refs {
+  list-style: none;
+  margin: var(--space-m) 0 0;
+  padding: 0;
+}
+
+.ccarp-refs li {
+  position: relative;
+  padding-left: 1.6em;
+}
+
+.ccarp-refs li + li {
+  margin-top: var(--space-m);
+}
+
+.ccarp-refs li::before {
+  content: "𓆝";
+  position: absolute;
+  left: 0;
+  font-family: Georgia, "Apple Color Emoji", "Segoe UI Emoji", serif;
+  font-style: normal;
+}
+
+.ccarp-week--off {
+  opacity: 0.55;
+}
+
+.ccarp-week--next .ccarp-week-date {
+  font-size: 1.05em;
 }
 
 /* CV page: four vertical stacks side by side (not newspaper-style flow). */

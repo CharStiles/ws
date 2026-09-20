@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% if title %}{{ title }}{% else %}CCARP{% endif %}</title>
+  <meta name="description" content="{{ description or 'EID 364 — Creative Coding as Research Practice.' }}">
+  <link rel="icon" href="/assets/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="/assets/favicon-180.png" sizes="180x180" type="image/png">
+  <link rel="apple-touch-icon" href="/assets/favicon-180.png">
+  <link rel="preload" href="/assets/fonts/RegTimes.otf" as="font" type="font/otf" crossorigin>
+  <link rel="preload" href="/assets/fonts/RegItalicAnrtBask.otf" as="font" type="font/otf" crossorigin>
+  <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body class="ccarp-page{% if bodyClass %} {{ bodyClass }}{% endif %}">
+  <header>
+    <nav class="ccarp-nav" aria-label="CCARP">
+      <a href="/ccarp/"{% if ccarpSection == 'syllabus' %} aria-current="page"{% endif %}><span class="ccarp-glyph" aria-hidden="true">𓆝 ⋆.</span> Syllabus</a>
+      <a href="/ccarp/schedule/"{% if ccarpSection == 'schedule' %} aria-current="page"{% endif %}><span class="ccarp-glyph" aria-hidden="true">𓆝 ⋆.</span> Schedule</a>
+    </nav>
+  </header>
+
+  <main>
+    {{ content | safe }}
+  </main>
+
+  <script src="/assets/js/hover-shader.js" defer></script>
+</body>
+</html>
