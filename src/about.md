@@ -6,7 +6,9 @@ permalink: /about/
 
 Char Stiles is a computational artist, educator, and researcher. She works
 creatively in the lower levels of graphical computational systems & makes
-jokes about how computers work.
+jokes about how computers work. She went to Carnegie Mellon University,
+where she earned a bachelor’s in fine art and computer science, and has a
+master’s in media arts and sciences from the MIT Media Lab.
 
 She was at the MIT Media Lab's Future Sketches group researching the future
 of creative coding in performance. She is a part of the
