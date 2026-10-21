@@ -118,8 +118,39 @@ void main() {
 }{% endraw %}</code></pre>
 </div>
 
+<p class="shader-continue">Continue your learning with <a href="https://thebookofshaders.com/">The Book of Shaders</a>.</p>
+
 <script>
 (function () {
+  var KEYWORDS = /\b(void|float|vec[234]|int|bool|return|if|else|for|in|out|const|struct)\b/g;
+  var BUILTINS = /\b(sin|cos|atan|length|abs|mod|min|max|mix|clamp|pow|dot|normalize|fract|floor|ceil|step|smoothstep|gl_FragCoord|gl_FragColor|time|resolution|bands|main)\b/g;
+  var NUMBERS = /\b\d+(?:\.\d*)?|\.\d+\b/g;
+
+  function escapeHtml(s) {
+    return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+
+  function paint(chunk) {
+    return escapeHtml(chunk)
+      .replace(KEYWORDS, "<span class=\"tok-kw\">$1</span>")
+      .replace(BUILTINS, "<span class=\"tok-fn\">$1</span>")
+      .replace(NUMBERS, "<span class=\"tok-num\">$&</span>");
+  }
+
+  function highlightGlsl(src) {
+    var out = "";
+    var re = /(\/\/[^\n]*)/g;
+    var last = 0;
+    var m;
+    while ((m = re.exec(src))) {
+      out += paint(src.slice(last, m.index));
+      out += "<span class=\"tok-cmt\">" + escapeHtml(m[1]) + "</span>";
+      last = m.index + m[1].length;
+    }
+    out += paint(src.slice(last));
+    return out;
+  }
+
   function copyText(text) {
     if (navigator.clipboard && navigator.clipboard.writeText) {
       return navigator.clipboard.writeText(text);
@@ -140,10 +171,12 @@ void main() {
 
   document.querySelectorAll(".shader-checkpoint").forEach(function (block) {
     var btn = block.querySelector(".shader-copy");
-    var code = block.querySelector("pre");
-    if (!btn || !code) return;
+    var pre = block.querySelector("pre");
+    var code = pre && pre.querySelector("code");
+    if (code) code.innerHTML = highlightGlsl(code.textContent);
+    if (!btn || !pre) return;
     btn.addEventListener("click", function () {
-      copyText(code.innerText).then(function () {
+      copyText(pre.innerText).then(function () {
         btn.textContent = "copied";
         setTimeout(function () { btn.textContent = "copy"; }, 1400);
       });
