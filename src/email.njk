@@ -1,0 +1,18 @@
+---
+permalink: /email/
+eleventyExcludeFromCollections: true
+layout: false
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Email list — {{ site.name }}</title>
+  <meta http-equiv="refresh" content="0; url={{ site.emailList }}">
+  <link rel="canonical" href="{{ site.emailList }}">
+  <script>window.location.replace({{ site.emailList | dump | safe }});</script>
+</head>
+<body>
+  <p><a href="{{ site.emailList }}">Continue to the email list.</a></p>
+</body>
+</html>
