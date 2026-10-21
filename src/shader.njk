@@ -10,29 +10,24 @@ eleventyExcludeFromCollections: true
 
 <p>Paste these into <a href="https://shawnlawson.github.io/The_Force/">The Force</a>. Helper functions live on the <a href="https://gist.github.com/CharStiles/e6fec016967c6c8fd648aa4b6c0055cc">sticker sheet</a>.</p>
 
-<h2>Checkpoint 1</h2>
-<pre class="shader-code"><code>{% raw %}void main() {
+<div class="shader-checkpoint">
+  <div class="shader-checkpoint-head">
+    <h2>Checkpoint 1</h2>
+    <button type="button" class="shader-copy">copy</button>
+  </div>
+  <pre class="shader-code"><code>{% raw %}void main() {
     vec2 pos = ((gl_FragCoord.xy/resolution) - 0.5)*2.0; // origin is in center
 
     gl_FragColor = vec4(pos.x, pos.y, 0.0, 1.0);
 }{% endraw %}</code></pre>
+</div>
 
-<h2>Checkpoint 2</h2>
-<pre class="shader-code"><code>{% raw %}// i copied and pasted these functions from the sticker sheet
-
-// As t runs from 0 to 1 (our normalized palette index or domain),
-//the cosine oscilates c times with a phase of d.
-//The result is scaled and biased by a and b to meet the desired constrast and brightness.
-// http://www.iquilezles.org/www/articles/palettes/palettes.htm
-// to see this function graphed out go to: https://www.desmos.com/calculator/rz7abjujdj
-vec3 cosPalette( float t , vec3 brightness, vec3 contrast, vec3 osc, vec3 phase)
-{
-
-    return brightness + contrast*cos( 6.28318*(osc*t+phase) );
-}
-
-
-void main() {
+<div class="shader-checkpoint">
+  <div class="shader-checkpoint-head">
+    <h2>Checkpoint 2</h2>
+    <button type="button" class="shader-copy">copy</button>
+  </div>
+  <pre class="shader-code"><code>{% raw %}void main() {
 
     vec2 pos = ((gl_FragCoord.xy/resolution) - 0.5)*2.0; // origin is in center
 
@@ -60,9 +55,14 @@ void main() {
 
 
 }{% endraw %}</code></pre>
+</div>
 
-<h2>Checkpoint 3</h2>
-<pre class="shader-code"><code>{% raw %}// i copied and pasted these functions from the sticker sheet
+<div class="shader-checkpoint">
+  <div class="shader-checkpoint-head">
+    <h2>Checkpoint 3</h2>
+    <button type="button" class="shader-copy">copy</button>
+  </div>
+  <pre class="shader-code"><code>{% raw %}// i copied and pasted these functions from the sticker sheet
 
 // As t runs from 0 to 1 (our normalized palette index or domain),
 //the cosine oscilates c times with a phase of d.
@@ -116,3 +116,38 @@ void main() {
 
 
 }{% endraw %}</code></pre>
+</div>
+
+<script>
+(function () {
+  function copyText(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard.writeText(text);
+    }
+    return new Promise(function (resolve, reject) {
+      var ta = document.createElement("textarea");
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      try {
+        document.execCommand("copy") ? resolve() : reject();
+      } catch (err) {
+        reject(err);
+      }
+      ta.remove();
+    });
+  }
+
+  document.querySelectorAll(".shader-checkpoint").forEach(function (block) {
+    var btn = block.querySelector(".shader-copy");
+    var code = block.querySelector("pre");
+    if (!btn || !code) return;
+    btn.addEventListener("click", function () {
+      copyText(code.innerText).then(function () {
+        btn.textContent = "copied";
+        setTimeout(function () { btn.textContent = "copy"; }, 1400);
+      });
+    });
+  });
+})();
+</script>

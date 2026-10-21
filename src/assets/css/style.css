@@ -224,8 +224,29 @@ body.shader-page main {
   max-width: 46rem;
 }
 
-.shader-page .performance-sheet h2:first-of-type {
-  margin-top: var(--space-xl);
+.shader-checkpoint-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-m);
+  margin: var(--space-xl) 0 var(--space-m);
+}
+
+.shader-checkpoint-head h2 {
+  margin: 0;
+}
+
+.shader-copy {
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  color: var(--ink);
+  font-family: "ANRT Baskerville", serif;
+  font-style: italic;
+  font-size: 1.08em;
+  font-synthesis: none;
 }
 
 .shader-code {
@@ -236,6 +257,7 @@ body.shader-page main {
   font-size: 0.82rem;
   line-height: 1.45;
   white-space: pre;
+  user-select: all;
 }
 
 .shader-code code {
