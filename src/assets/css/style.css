@@ -220,6 +220,29 @@ body.standalone-page {
   }
 }
 
+body.shader-page main {
+  max-width: 46rem;
+}
+
+.shader-page .performance-sheet h2:first-of-type {
+  margin-top: var(--space-xl);
+}
+
+.shader-code {
+  overflow-x: auto;
+  margin: 0;
+  padding: 0;
+  font-family: "Terminal Grotesque", ui-monospace, Menlo, monospace;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  white-space: pre;
+}
+
+.shader-code code {
+  font-family: inherit;
+  font-size: inherit;
+}
+
 /* CCARP syllabus — EID 364 */
 @font-face {
   font-family: "Terminal Grotesque";
